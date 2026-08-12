@@ -1,6 +1,8 @@
 # Marginalia
 
-A book recommendation engine for those looking to travel more knowledgeably, or read what the people they look up to read.
+I wanted a recommendation product for books centered on places I was soon going to travel to, so I put this together using selected Kaggle datasets based on Goodreads ratings and user input for genre preferences.
+
+Built primarily through iterative prompting with Claude.
 
 Two flows, a short curated list each (up to five), no doomscrolling:
 
@@ -42,8 +44,3 @@ To go further toward production, the natural next step is a real backend pulling
 ## Stack
 
 Vite + React + TypeScript + Tailwind CSS. No backend, no database — everything runs client-side against the curated dataset.
-# book-recs
-
-I wanted a recommendation product for books centered on places I was soon going to travel to, so I put this together using a few selected Kaggle datasets based on Goodreads ratings etc., and user I wanted a book recommendation product centered on places I was soon going to travel to, so I put this together using selected Kaggle datasets based on Goodreads ratings and user input for genre preferences.
-
-Built primarily through iterative prompting with Claude.
