@@ -28,6 +28,12 @@ export default function Cover({ book, size = 'md' }: { book: Book; size?: 'sm' |
       src={`https://covers.openlibrary.org/b/isbn/${book.isbn}-M.jpg`}
       alt={`Cover of ${book.title}`}
       onError={() => setFailed(true)}
+      onLoad={(e) => {
+        // Open Library returns a real HTTP 200 with a tiny placeholder image
+        // (rather than a 404) when it has no cover for an ISBN, so onError
+        // never fires for those — catch it by checking actual pixel size.
+        if (e.currentTarget.naturalWidth < 25) setFailed(true)
+      }}
       className={`${dims} shrink-0 rounded-sm object-cover shadow-card border border-ink/10 bg-paper-dim`}
     />
   )

@@ -1,24 +1,24 @@
 import { useState, type FormEvent } from 'react'
-import type { Genre } from '../data/types'
+import type { Book, Genre } from '../data/types'
 import GenrePicker from './GenrePicker'
 import TagInput from './TagInput'
 import BookResultCard from './BookResultCard'
 import { allRecommenders, recommendForPro, PRO_MIN_RATING, type RankedBook } from '../lib/recommend'
 
-export default function ReadLikeAPro({ onBack }: { onBack: () => void }) {
+export default function ReadLikeAPro({ onBack, pool }: { onBack: () => void; pool: Book[] }) {
   const [people, setPeople] = useState<string[]>([])
   const [genres, setGenres] = useState<Genre[]>([])
   const [results, setResults] = useState<RankedBook[] | null>(null)
   const [submitted, setSubmitted] = useState(false)
 
-  const recommenders = allRecommenders()
+  const recommenders = allRecommenders(pool)
   const nameHints = recommenders.map((r) => r.name)
 
   const handleSubmit = (e: FormEvent) => {
     e.preventDefault()
     setSubmitted(true)
     if (people.length === 0) return
-    setResults(recommendForPro({ people, genres }))
+    setResults(recommendForPro(pool, { people, genres }))
   }
 
   return (

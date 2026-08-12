@@ -17,6 +17,33 @@ export type Genre =
   | 'Philosophy'
   | 'Self-Help'
   | 'Classic'
+  | 'Young Adult'
+  | 'Romance'
+  | 'Horror'
+
+export const ALL_GENRES: Genre[] = [
+  'Biography',
+  'Business',
+  'Classic',
+  'Fiction',
+  'Historical Fiction',
+  'History',
+  'Horror',
+  'Literary Fiction',
+  'Memoir',
+  'Mystery/Thriller',
+  'Nonfiction',
+  'Philosophy',
+  'Poetry',
+  'Politics',
+  'Romance',
+  'Sci-Fi/Fantasy',
+  'Science',
+  'Self-Help',
+  'Short Stories',
+  'Travel Writing',
+  'Young Adult',
+]
 
 export interface Recommendation {
   /** The public figure who has recommended this book. */
@@ -33,7 +60,8 @@ export interface Book {
   author: string
   /** ISBN-13, used to fetch a real cover from Open Library; falls back to a generated cover if it 404s. */
   isbn?: string
-  year: number
+  /** Omitted where the source data's publish date couldn't be parsed confidently. */
+  year?: number
   genres: Genre[]
   /** Curated approximate Goodreads rating out of 5. */
   goodreadsRating: number

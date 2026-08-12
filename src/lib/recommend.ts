@@ -1,4 +1,3 @@
-import { books } from '../data/books'
 import type { Book, Genre } from '../data/types'
 
 export const TRAVEL_MIN_RATING = 3.8
@@ -16,6 +15,22 @@ export const MOCK_CONNECTED_SHELF: Record<string, string[]> = {
 
 function normalize(s: string): string {
   return s.trim().toLowerCase()
+}
+
+/**
+ * Matches a location tag against one comma-separated segment of the user's
+ * query (e.g. "Kyoto, Japan" -> ["kyoto", "japan"]). Containment is only
+ * allowed when the shorter phrase has 2+ words, so a short, ambiguous tag
+ * like "york" can't match purely by being a substring fragment of "new
+ * york" — it has to equal a whole query segment instead.
+ */
+function placeMatches(tag: string, querySegments: string[]): boolean {
+  return querySegments.some((seg) => {
+    if (tag === seg) return true
+    const shorter = tag.length <= seg.length ? tag : seg
+    const longer = tag.length <= seg.length ? seg : tag
+    return shorter.split(' ').length >= 2 && longer.includes(shorter)
+  })
 }
 
 function titleMatches(book: Book, readTitles: string[]): boolean {
@@ -41,16 +56,18 @@ export interface RankedBook {
   score: number
 }
 
-export function recommendForTravel(input: TravelInput): RankedBook[] {
-  const locQuery = normalize(input.location)
-  const locTerms = locQuery.split(/[,\s]+/).filter(Boolean)
+export function recommendForTravel(pool: Book[], input: TravelInput): RankedBook[] {
+  const locSegments = normalize(input.location)
+    .split(',')
+    .map((s) => s.trim())
+    .filter(Boolean)
   const readTitles = [
     ...input.booksEnjoyed,
     ...(input.connectedService ? MOCK_CONNECTED_SHELF[input.connectedService] ?? [] : []),
   ]
   const connectedIds = input.connectedService ? MOCK_CONNECTED_SHELF[input.connectedService] ?? [] : []
 
-  const candidates = books.filter((b) => {
+  const candidates = pool.filter((b) => {
     if (b.goodreadsRating < TRAVEL_MIN_RATING) return false
     if (connectedIds.includes(b.id)) return false
     if (titleMatches(b, input.booksEnjoyed)) return false
@@ -62,7 +79,7 @@ export function recommendForTravel(input: TravelInput): RankedBook[] {
     let score = 0
 
     const tags = book.locationTags ?? []
-    const locHit = locTerms.length > 0 && tags.some((tag) => locTerms.some((term) => tag.includes(term) || term.includes(tag)))
+    const locHit = locSegments.length > 0 && tags.some((tag) => placeMatches(tag, locSegments))
     if (locHit) {
       score += 50
       reasons.push(`Set in or around ${input.location.trim()}`)
@@ -92,11 +109,11 @@ export interface ProInput {
   genres: Genre[]
 }
 
-export function recommendForPro(input: ProInput): RankedBook[] {
+export function recommendForPro(pool: Book[], input: ProInput): RankedBook[] {
   const peopleTerms = input.people.map(normalize).filter(Boolean)
   if (peopleTerms.length === 0) return []
 
-  const candidates = books.filter((b) => {
+  const candidates = pool.filter((b) => {
     if (b.goodreadsRating < PRO_MIN_RATING) return false
     if (!b.recommendedBy || b.recommendedBy.length === 0) return false
     return b.recommendedBy.some((r) => peopleTerms.some((p) => normalize(r.name).includes(p) || p.includes(normalize(r.name))))
@@ -128,21 +145,15 @@ export function recommendForPro(input: ProInput): RankedBook[] {
   return ranked.sort((a, b) => b.score - a.score || b.book.goodreadsRating - a.book.goodreadsRating).slice(0, 5)
 }
 
-export function allGenres(): Genre[] {
-  const set = new Set<Genre>()
-  books.forEach((b) => b.genres.forEach((g) => set.add(g)))
-  return Array.from(set).sort()
-}
-
-export function allRecommenders(): { name: string; role: string }[] {
+export function allRecommenders(pool: Book[]): { name: string; role: string }[] {
   const map = new Map<string, string>()
-  books.forEach((b) => (b.recommendedBy ?? []).forEach((r) => map.set(r.name, r.role)))
+  pool.forEach((b) => (b.recommendedBy ?? []).forEach((r) => map.set(r.name, r.role)))
   return Array.from(map.entries()).map(([name, role]) => ({ name, role }))
 }
 
-export function allLocationHints(): string[] {
+export function allLocationHints(pool: Book[]): string[] {
   const set = new Set<string>()
-  books.forEach((b) => (b.locationTags ?? []).forEach((t) => {
+  pool.forEach((b) => (b.locationTags ?? []).forEach((t) => {
     if (t !== 'world' && t !== 'general') set.add(t)
   }))
   return Array.from(set).sort()

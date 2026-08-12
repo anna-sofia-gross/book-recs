@@ -1,8 +1,7 @@
-import type { Genre } from '../data/types'
-import { allGenres } from '../lib/recommend'
+import { ALL_GENRES, type Genre } from '../data/types'
 
 export default function GenrePicker({ selected, onChange }: { selected: Genre[]; onChange: (g: Genre[]) => void }) {
-  const genres = allGenres()
+  const genres = ALL_GENRES
 
   const toggle = (g: Genre) => {
     onChange(selected.includes(g) ? selected.filter((x) => x !== g) : [...selected, g])

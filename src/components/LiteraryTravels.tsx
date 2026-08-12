@@ -1,5 +1,5 @@
 import { useState, type FormEvent } from 'react'
-import type { Genre } from '../data/types'
+import type { Book, Genre } from '../data/types'
 import GenrePicker from './GenrePicker'
 import TagInput from './TagInput'
 import BookResultCard from './BookResultCard'
@@ -7,7 +7,7 @@ import { allLocationHints, recommendForTravel, TRAVEL_MIN_RATING, type RankedBoo
 
 type ConnectState = 'goodreads' | 'fable' | null
 
-export default function LiteraryTravels({ onBack }: { onBack: () => void }) {
+export default function LiteraryTravels({ onBack, pool }: { onBack: () => void; pool: Book[] }) {
   const [location, setLocation] = useState('')
   const [genres, setGenres] = useState<Genre[]>([])
   const [booksEnjoyed, setBooksEnjoyed] = useState<string[]>([])
@@ -15,13 +15,13 @@ export default function LiteraryTravels({ onBack }: { onBack: () => void }) {
   const [results, setResults] = useState<RankedBook[] | null>(null)
   const [submitted, setSubmitted] = useState(false)
 
-  const locationHints = allLocationHints()
+  const locationHints = allLocationHints(pool)
 
   const handleSubmit = (e: FormEvent) => {
     e.preventDefault()
     setSubmitted(true)
     if (!location.trim()) return
-    setResults(recommendForTravel({ location, genres, booksEnjoyed, connectedService: connected }))
+    setResults(recommendForTravel(pool, { location, genres, booksEnjoyed, connectedService: connected }))
   }
 
   return (

@@ -15,7 +15,7 @@ export default function BookResultCard({ rank, result }: { rank: number; result:
           <div className="flex flex-wrap items-start justify-between gap-2">
             <div>
               <h3 className="font-display text-xl leading-snug text-ink">{book.title}</h3>
-              <p className="font-sans text-sm text-ink-faint">{book.author} · {book.year}</p>
+              <p className="font-sans text-sm text-ink-faint">{book.author}{book.year ? ` · ${book.year}` : ''}</p>
             </div>
             <RatingStamp rating={book.goodreadsRating} count={book.ratingsLabel} />
           </div>
