@@ -1,0 +1,38 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  html {
+    background-color: #f4eee2;
+  }
+  body {
+    @apply bg-paper text-ink font-serif antialiased;
+    background-image: theme('backgroundImage.grain');
+  }
+  h1, h2, h3, h4 {
+    @apply font-display;
+  }
+  ::selection {
+    background-color: #d9b463;
+    color: #211c15;
+  }
+}
+
+@layer utilities {
+  .text-balance {
+    text-wrap: balance;
+  }
+}
+
+/* underline-in-ink link style, used sparingly so it stays intentional */
+.ink-link {
+  background-image: linear-gradient(currentColor, currentColor);
+  background-position: 0 100%;
+  background-repeat: no-repeat;
+  background-size: 0% 1px;
+  transition: background-size 0.25s ease;
+}
+.ink-link:hover {
+  background-size: 100% 1px;
+}
