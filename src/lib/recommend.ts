@@ -33,20 +33,9 @@ function placeMatches(tag: string, querySegments: string[]): boolean {
   })
 }
 
-function titleMatches(book: Book, readTitles: string[]): boolean {
-  const t = normalize(book.title)
-  const a = normalize(book.author)
-  return readTitles.some((r) => {
-    const rn = normalize(r)
-    if (!rn) return false
-    return t === rn || t.includes(rn) || rn.includes(t) || a.includes(rn)
-  })
-}
-
 export interface TravelInput {
   location: string
   genres: Genre[]
-  booksEnjoyed: string[]
   connectedService?: 'goodreads' | 'fable' | null
 }
 
@@ -61,16 +50,11 @@ export function recommendForTravel(pool: Book[], input: TravelInput): RankedBook
     .split(',')
     .map((s) => s.trim())
     .filter(Boolean)
-  const readTitles = [
-    ...input.booksEnjoyed,
-    ...(input.connectedService ? MOCK_CONNECTED_SHELF[input.connectedService] ?? [] : []),
-  ]
   const connectedIds = input.connectedService ? MOCK_CONNECTED_SHELF[input.connectedService] ?? [] : []
 
   const candidates = pool.filter((b) => {
     if (b.goodreadsRating < TRAVEL_MIN_RATING) return false
     if (connectedIds.includes(b.id)) return false
-    if (titleMatches(b, input.booksEnjoyed)) return false
     return true
   })
 

@@ -1,7 +1,6 @@
 import { useState, type FormEvent } from 'react'
 import type { Book, Genre } from '../data/types'
 import GenrePicker from './GenrePicker'
-import TagInput from './TagInput'
 import BookResultCard from './BookResultCard'
 import { allLocationHints, recommendForTravel, type RankedBook } from '../lib/recommend'
 
@@ -10,7 +9,6 @@ type ConnectState = 'goodreads' | 'fable' | null
 export default function LiteraryTravels({ onBack, pool }: { onBack: () => void; pool: Book[] }) {
   const [location, setLocation] = useState('')
   const [genres, setGenres] = useState<Genre[]>([])
-  const [booksEnjoyed, setBooksEnjoyed] = useState<string[]>([])
   const [connected, setConnected] = useState<ConnectState>(null)
   const [results, setResults] = useState<RankedBook[] | null>(null)
   const [submitted, setSubmitted] = useState(false)
@@ -21,7 +19,7 @@ export default function LiteraryTravels({ onBack, pool }: { onBack: () => void; 
     e.preventDefault()
     setSubmitted(true)
     if (!location.trim()) return
-    setResults(recommendForTravel(pool, { location, genres, booksEnjoyed, connectedService: connected }))
+    setResults(recommendForTravel(pool, { location, genres, connectedService: connected }))
   }
 
   return (
@@ -65,20 +63,6 @@ export default function LiteraryTravels({ onBack, pool }: { onBack: () => void; 
           <p className="font-sans text-xs text-ink-faint">Optional — leave blank for any genre.</p>
           <div className="mt-2.5">
             <GenrePicker selected={genres} onChange={setGenres} />
-          </div>
-        </div>
-
-        <div>
-          <span className="font-sans text-sm font-semibold text-ink">Books you've already enjoyed</span>
-          <p className="font-sans text-xs text-ink-faint">
-            We'll keep these — and anything very similar — out of your results.
-          </p>
-          <div className="mt-2.5">
-            <TagInput
-              values={booksEnjoyed}
-              onChange={setBooksEnjoyed}
-              placeholder="Type a title and hit enter"
-            />
           </div>
         </div>
 
