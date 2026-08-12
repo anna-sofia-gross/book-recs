@@ -31,7 +31,7 @@ export default function LiteraryTravels({ onBack, pool }: { onBack: () => void; 
       <div className="mt-4">
         <h1 className="mt-2 font-display text-3xl text-ink sm:text-4xl">Literary Travels</h1>
         <p className="mt-3 max-w-xl font-serif text-[15px] leading-relaxed text-ink-soft">
-          Five books chosen to make your destination feel familiar before you arrive.
+          A short reading list chosen to make your destination feel familiar before you arrive.
         </p>
       </div>
 
@@ -94,7 +94,7 @@ export default function LiteraryTravels({ onBack, pool }: { onBack: () => void; 
           type="submit"
           className="self-start rounded-full bg-rust px-6 py-3 font-sans text-sm font-semibold text-paper shadow-card transition-colors hover:bg-rust-dark"
         >
-          Show my five books
+          Show my reading list
         </button>
       </form>
 

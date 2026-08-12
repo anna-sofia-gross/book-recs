@@ -318,6 +318,7 @@ def main():
         seen_ids.add(book_id)
 
         isbn = valid_isbn(match.get('isbn'))
+        google_id = (csv_row.get('google_id') or '').strip()
         num_ratings = int(match.get('numRatings') or 0)
         palette = list(PALETTES[hash(book_id) % len(PALETTES)])
 
@@ -349,6 +350,8 @@ def main():
             book_entry['year'] = year
         if isbn:
             book_entry['isbn'] = isbn
+        if google_id:
+            book_entry['googleId'] = google_id
         out.append(book_entry)
 
     with open('public/data/recommender-catalog.json', 'w', encoding='utf-8') as f:

@@ -30,7 +30,7 @@ export default function ReadLikeAPro({ onBack, pool }: { onBack: () => void; poo
       <div className="mt-4">
         <h1 className="mt-2 font-display text-3xl text-ink sm:text-4xl">Read Like a Pro</h1>
         <p className="mt-3 max-w-xl font-serif text-[15px] leading-relaxed text-ink-soft">
-          Five books drawn from what the people you admire have publicly recommended.
+          A short reading list drawn from what the people you admire have publicly recommended.
         </p>
       </div>
 
@@ -63,7 +63,7 @@ export default function ReadLikeAPro({ onBack, pool }: { onBack: () => void; poo
           type="submit"
           className="self-start rounded-full bg-moss px-6 py-3 font-sans text-sm font-semibold text-paper shadow-card transition-colors hover:bg-moss-dark"
         >
-          Show my five books
+          Show my reading list
         </button>
       </form>
 

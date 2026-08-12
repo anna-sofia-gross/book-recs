@@ -13,8 +13,8 @@ export default function Landing({
           Find the book that already knows where you're going.
         </h1>
         <p className="mt-5 max-w-xl text-balance font-serif text-lg leading-relaxed text-ink-soft">
-          Marginalia recommends five books at a time, based on your travel plans or your role models'
-          reading recommendations — all annotated with why each one earns its spot.
+          Marginalia recommends a short, curated list at a time, based on your travel plans or your
+          role models' reading recommendations — all annotated with why each one earns its spot.
         </p>
       </div>
 
@@ -26,8 +26,8 @@ export default function Landing({
           <div className="absolute -right-8 -top-8 h-32 w-32 rounded-full bg-rust/10 transition-transform group-hover:scale-110" />
           <h2 className="mt-3 font-display text-2xl text-ink sm:text-3xl">Literary Travels</h2>
           <p className="mt-3 font-serif text-[15px] leading-relaxed text-ink-soft">
-            Tell us where you're headed. We'll hand you five books that make the place
-            come alive before you land.
+            Tell us where you're headed. We'll hand you a short reading list that makes
+            the place come alive before you land.
           </p>
           <span className="mt-6 inline-flex items-center gap-1.5 font-sans text-sm font-semibold text-rust">
             Plan a reading list

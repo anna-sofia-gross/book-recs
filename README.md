@@ -2,10 +2,10 @@
 
 A book recommendation engine for those looking to travel more knowledgeably, or read what the people they look up to read.
 
-Two flows, five books each, no doomscrolling:
+Two flows, a short curated list each (up to five), no doomscrolling:
 
-- **Literary Travels** — enter a destination and your genre preferences. Get five books (rated 3.8+ on Goodreads) that deepen your understanding of the place before you land. Includes a demo "connect Goodreads/Fable" toggle that simulates excluding books already on your shelf.
-- **Read Like a Pro** — enter public figures you admire and get five books (rated 3.4+ on Goodreads) they've publicly recommended, filtered by genre.
+- **Literary Travels** — enter a destination and your genre preferences. Get a short reading list (rated 3.8+ on Goodreads) that deepens your understanding of the place before you land. Includes a demo "connect Goodreads/Fable" toggle that simulates excluding books already on your shelf.
+- **Read Like a Pro** — enter public figures you admire and get a short reading list (rated 3.4+ on Goodreads) they've publicly recommended, filtered by genre.
 
 ## Running it
 

@@ -60,6 +60,8 @@ export interface Book {
   author: string
   /** ISBN-13, used to fetch a real cover from Open Library; falls back to a generated cover if it 404s. */
   isbn?: string
+  /** Google Books volume ID, tried as a second cover source after Open Library. */
+  googleId?: string
   /** Omitted where the source data's publish date couldn't be parsed confidently. */
   year?: number
   genres: Genre[]
