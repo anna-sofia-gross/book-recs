@@ -11,7 +11,7 @@ export default function Header({ onHome }: { onHome: () => void }) {
           <span className="font-display text-lg tracking-tight text-ink">Marginalia</span>
         </button>
         <span className="hidden font-mono text-[11px] uppercase tracking-widest text-ink-faint sm:block">
-          notes for your next chapter
+          find your next chapter
         </span>
       </div>
     </header>

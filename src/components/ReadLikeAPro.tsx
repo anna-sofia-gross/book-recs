@@ -3,7 +3,7 @@ import type { Book, Genre } from '../data/types'
 import GenrePicker from './GenrePicker'
 import TagInput from './TagInput'
 import BookResultCard from './BookResultCard'
-import { allRecommenders, recommendForPro, PRO_MIN_RATING, type RankedBook } from '../lib/recommend'
+import { allRecommenders, recommendForPro, type RankedBook } from '../lib/recommend'
 
 export default function ReadLikeAPro({ onBack, pool }: { onBack: () => void; pool: Book[] }) {
   const [people, setPeople] = useState<string[]>([])
@@ -28,11 +28,9 @@ export default function ReadLikeAPro({ onBack, pool }: { onBack: () => void; poo
       </button>
 
       <div className="mt-4">
-        <span className="font-mono text-xs uppercase tracking-widest text-moss-dark">Flow two</span>
         <h1 className="mt-2 font-display text-3xl text-ink sm:text-4xl">Read Like a Pro</h1>
         <p className="mt-3 max-w-xl font-serif text-[15px] leading-relaxed text-ink-soft">
-          Five books, rated {PRO_MIN_RATING.toFixed(1)}+ on Goodreads, drawn from what the people you admire
-          have publicly recommended.
+          Five books drawn from what the people you admire have publicly recommended.
         </p>
       </div>
 

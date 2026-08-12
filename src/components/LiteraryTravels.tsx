@@ -3,7 +3,7 @@ import type { Book, Genre } from '../data/types'
 import GenrePicker from './GenrePicker'
 import TagInput from './TagInput'
 import BookResultCard from './BookResultCard'
-import { allLocationHints, recommendForTravel, TRAVEL_MIN_RATING, type RankedBook } from '../lib/recommend'
+import { allLocationHints, recommendForTravel, type RankedBook } from '../lib/recommend'
 
 type ConnectState = 'goodreads' | 'fable' | null
 
@@ -31,11 +31,9 @@ export default function LiteraryTravels({ onBack, pool }: { onBack: () => void; 
       </button>
 
       <div className="mt-4">
-        <span className="font-mono text-xs uppercase tracking-widest text-rust">Flow one</span>
         <h1 className="mt-2 font-display text-3xl text-ink sm:text-4xl">Literary Travels</h1>
         <p className="mt-3 max-w-xl font-serif text-[15px] leading-relaxed text-ink-soft">
-          Five books, rated {TRAVEL_MIN_RATING.toFixed(1)}+ on Goodreads, chosen to make your destination
-          feel familiar before you arrive.
+          Five books chosen to make your destination feel familiar before you arrive.
         </p>
       </div>
 
