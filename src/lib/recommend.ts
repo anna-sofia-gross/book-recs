@@ -1,4 +1,25 @@
+import { COUNTRIES } from '../data/countries'
 import type { Book, Genre } from '../data/types'
+
+/**
+ * Defunct/historical political entities that show up in crowd-sourced book
+ * "setting" tags (a Cold War novel genuinely gets tagged "East Germany" or
+ * "Soviet Union" by Goodreads readers). Legitimate for matching — someone
+ * who types "Soviet Union" should still find that book — but not something
+ * to suggest in the location autocomplete, since nobody travels there today.
+ */
+const DEFUNCT_LOCATIONS = new Set([
+  'german democratic republic', 'east germany', 'west germany',
+  'soviet union', 'ussr', 'petrograd soviet',
+  'czechoslovakia', 'yugoslavia',
+  'ottoman empire', 'austro-hungarian empire', 'austria-hungary',
+  'prussia', 'east prussia',
+  'rhodesia', 'southern rhodesia',
+  'siam', 'ceylon', 'persia', 'persian empire',
+  'indochina', 'french indochina', 'british raj', 'british india',
+  'byzantine empire', 'roman empire', 'the roman empire', 'holy roman empire',
+  'gaul', 'mesopotamia', 'bohemia', 'dahomey', 'transvaal', 'gold coast',
+])
 
 export const TRAVEL_MIN_RATING = 3.8
 export const PRO_MIN_RATING = 3.4
@@ -136,9 +157,9 @@ export function allRecommenders(pool: Book[]): { name: string; role: string }[] 
 }
 
 export function allLocationHints(pool: Book[]): string[] {
-  const set = new Set<string>()
+  const set = new Set<string>(COUNTRIES)
   pool.forEach((b) => (b.locationTags ?? []).forEach((t) => {
-    if (t !== 'world' && t !== 'general') set.add(t)
+    if (t !== 'world' && t !== 'general' && !DEFUNCT_LOCATIONS.has(t)) set.add(t)
   }))
   return Array.from(set).sort()
 }
