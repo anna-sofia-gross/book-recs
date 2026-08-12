@@ -210,10 +210,16 @@ def main():
             i += 1
         seen_ids.add(book_id)
 
+        location_tags = extract_location_tags(row.get('setting') or [])
+        if not location_tags:
+            # This catalog only feeds "Literary Travels" — a book with no
+            # real-world setting can never match a location query, so
+            # keeping it would only bloat the fetched file for no benefit.
+            continue
+
         isbn = valid_isbn(row.get('isbn'))
         year = parse_year(str(row.get('publishDate') or ''))
         genres = map_genres(row.get('genres') or [])
-        location_tags = extract_location_tags(row.get('setting') or [])
         num_ratings = int(row.get('numRatings') or 0)
         palette = list(PALETTES[hash(book_id) % len(PALETTES)])
 
@@ -227,22 +233,19 @@ def main():
             'ratingsLabel': format_ratings_label(num_ratings),
             'summary': summary,
             'palette': palette,
+            'locationTags': location_tags,
         }
         if isbn:
             entry['isbn'] = isbn
-        if location_tags:
-            entry['locationTags'] = location_tags
         out.append(entry)
 
     with open('public/data/travel-catalog.json', 'w', encoding='utf-8') as f:
         json.dump(out, f, ensure_ascii=False, separators=(',', ':'))
 
-    with_locations = sum(1 for b in out if b.get('locationTags'))
     with_isbn = sum(1 for b in out if b.get('isbn'))
     genre_counts = Counter(g for b in out for g in b['genres'])
 
     print(f'wrote {len(out)} books (dropped {dropped_no_summary} with no summary)')
-    print(f'with locationTags: {with_locations}')
     print(f'with isbn: {with_isbn}')
     print('genre distribution:', dict(genre_counts.most_common()))
 
