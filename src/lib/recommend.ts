@@ -35,7 +35,7 @@ export const PRO_MIN_RATING = 3.4
  * Literary Fiction, Classic, etc.) stay opt-out as before — only genres
  * that represent a distinct format or audience are opt-in.
  */
-const EXCLUSIVE_GENRES: Genre[] = ['Young Adult', 'Mystery/Thriller']
+const EXCLUSIVE_GENRES: Genre[] = ['Young Adult', 'Mystery/Thriller', 'Romance', 'Horror', 'Sci-Fi/Fantasy']
 
 /** True if a book carries an exclusive genre the user didn't ask for. */
 function blockedByExclusiveGenre(book: Book, selectedGenres: Genre[]): boolean {
