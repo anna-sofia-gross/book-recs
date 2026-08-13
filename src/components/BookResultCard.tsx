@@ -1,11 +1,41 @@
+import { useState, type KeyboardEvent } from 'react'
 import Cover from './Cover'
 import RatingStamp from './RatingStamp'
 import type { RankedBook } from '../lib/recommend'
+import { fetchFullDescription } from '../lib/bookDetails'
 
 export default function BookResultCard({ rank, result }: { rank: number; result: RankedBook }) {
   const { book, matchReasons } = result
+  const [expanded, setExpanded] = useState(false)
+  const [fullSummary, setFullSummary] = useState<string | null>(null)
+  const [loadingMore, setLoadingMore] = useState(false)
+
+  const displayedSummary = fullSummary ?? book.summary
+
+  const toggleExpanded = () => {
+    const next = !expanded
+    setExpanded(next)
+    if (next && !fullSummary && !loadingMore && (book.isbn || book.googleId)) {
+      setLoadingMore(true)
+      fetchFullDescription(book).then((desc) => {
+        if (desc && desc.length > book.summary.length) setFullSummary(desc)
+        setLoadingMore(false)
+      })
+    }
+  }
+
+  const handleSummaryKeyDown = (e: KeyboardEvent) => {
+    if (e.key === 'Enter' || e.key === ' ') {
+      e.preventDefault()
+      toggleExpanded()
+    }
+  }
+
   return (
-    <li className="group relative rounded-xl border border-ink/10 bg-paper-card p-5 sm:p-6 shadow-card">
+    <li
+      onClick={toggleExpanded}
+      className="group relative cursor-pointer rounded-xl border border-ink/10 bg-paper-card p-5 sm:p-6 shadow-card"
+    >
       <span className="absolute -top-3 -left-3 flex h-9 w-9 items-center justify-center rounded-full bg-rust font-display text-lg text-paper shadow-card">
         {rank}
       </span>
@@ -20,7 +50,28 @@ export default function BookResultCard({ rank, result }: { rank: number; result:
             <RatingStamp rating={book.goodreadsRating} count={book.ratingsLabel} />
           </div>
 
-          <p className="mt-3 font-serif text-[15px] leading-relaxed text-ink-soft">{book.summary}</p>
+          <p
+            role="button"
+            tabIndex={0}
+            aria-expanded={expanded}
+            onKeyDown={handleSummaryKeyDown}
+            className={`mt-3 font-serif text-[15px] leading-relaxed text-ink-soft ${expanded ? '' : 'line-clamp-3'}`}
+          >
+            {displayedSummary}
+          </p>
+          <div className="mt-1 flex items-center gap-2">
+            <button
+              type="button"
+              onClick={(e) => {
+                e.stopPropagation()
+                toggleExpanded()
+              }}
+              className="font-mono text-xs text-rust hover:underline"
+            >
+              {expanded ? 'Show less ▲' : 'Read more ▾'}
+            </button>
+            {expanded && loadingMore && <span className="font-mono text-xs text-ink-faint">loading more…</span>}
+          </div>
 
           {book.whyThisPlace && (
             <p className="mt-3 border-l-2 border-rust/60 pl-3 font-serif text-[15px] italic leading-relaxed text-ink">
