@@ -1,4 +1,4 @@
-import { useState, type FormEvent } from 'react'
+import { useRef, useState, type FormEvent } from 'react'
 import type { Book, Genre } from '../data/types'
 import GenrePicker from './GenrePicker'
 import BookResultCard from './BookResultCard'
@@ -12,6 +12,7 @@ export default function LiteraryTravels({ onBack, pool }: { onBack: () => void; 
   const [connected, setConnected] = useState<ConnectState>(null)
   const [results, setResults] = useState<RankedBook[] | null>(null)
   const [submitted, setSubmitted] = useState(false)
+  const locationInputRef = useRef<HTMLInputElement>(null)
 
   const locationHints = allLocationHints(pool)
 
@@ -20,6 +21,11 @@ export default function LiteraryTravels({ onBack, pool }: { onBack: () => void; 
     setSubmitted(true)
     if (!location.trim()) return
     setResults(recommendForTravel(pool, { location, genres, connectedService: connected }))
+  }
+
+  const refineSearch = () => {
+    locationInputRef.current?.scrollIntoView({ behavior: 'smooth', block: 'center' })
+    locationInputRef.current?.focus()
   }
 
   return (
@@ -42,6 +48,7 @@ export default function LiteraryTravels({ onBack, pool }: { onBack: () => void; 
           </label>
           <input
             id="location"
+            ref={locationInputRef}
             list="location-hints"
             value={location}
             onChange={(e) => setLocation(e.target.value)}
@@ -100,9 +107,18 @@ export default function LiteraryTravels({ onBack, pool }: { onBack: () => void; 
 
       {results && (
         <div className="mt-14">
-          <h2 className="font-display text-xl text-ink">
-            {results.length > 0 ? `Reading list for ${location.trim()}` : `Nothing landed for "${location.trim()}"`}
-          </h2>
+          <div className="flex flex-wrap items-baseline justify-between gap-x-4 gap-y-1">
+            <h2 className="font-display text-xl text-ink">
+              {results.length > 0 ? `Reading list for ${location.trim()}` : `Nothing landed for "${location.trim()}"`}
+            </h2>
+            <button
+              type="button"
+              onClick={refineSearch}
+              className="ink-link font-mono text-xs text-ink-faint whitespace-nowrap"
+            >
+              ✎ refine your search
+            </button>
+          </div>
           {results.length === 0 && (
             <p className="mt-2 max-w-md font-serif text-[15px] text-ink-soft">
               We don't have a strong enough match yet — try a nearby city, region, or country, or loosen your

@@ -1,4 +1,4 @@
-import { useState, type FormEvent } from 'react'
+import { useRef, useState, type FormEvent } from 'react'
 import type { Book, Genre } from '../data/types'
 import GenrePicker from './GenrePicker'
 import TagInput from './TagInput'
@@ -10,6 +10,7 @@ export default function ReadLikeAPro({ onBack, pool }: { onBack: () => void; poo
   const [genres, setGenres] = useState<Genre[]>([])
   const [results, setResults] = useState<RankedBook[] | null>(null)
   const [submitted, setSubmitted] = useState(false)
+  const peopleFieldRef = useRef<HTMLDivElement>(null)
 
   const recommenders = allRecommenders(pool)
   const nameHints = recommenders.map((r) => r.name)
@@ -19,6 +20,10 @@ export default function ReadLikeAPro({ onBack, pool }: { onBack: () => void; poo
     setSubmitted(true)
     if (people.length === 0) return
     setResults(recommendForPro(pool, { people, genres }))
+  }
+
+  const refineSearch = () => {
+    peopleFieldRef.current?.scrollIntoView({ behavior: 'smooth', block: 'center' })
   }
 
   return (
@@ -35,7 +40,7 @@ export default function ReadLikeAPro({ onBack, pool }: { onBack: () => void; poo
       </div>
 
       <form onSubmit={handleSubmit} className="mt-10 flex flex-col gap-8">
-        <div>
+        <div ref={peopleFieldRef}>
           <span className="font-sans text-sm font-semibold text-ink">Who do you look up to?</span>
           <p className="font-sans text-xs text-ink-faint">Start typing for names we currently cover.</p>
           <div className="mt-2.5">
@@ -82,9 +87,18 @@ export default function ReadLikeAPro({ onBack, pool }: { onBack: () => void; poo
 
       {results && (
         <div className="mt-14">
-          <h2 className="font-display text-xl text-ink">
-            {results.length > 0 ? 'Books they’ve pointed to' : 'No matches yet'}
-          </h2>
+          <div className="flex flex-wrap items-baseline justify-between gap-x-4 gap-y-1">
+            <h2 className="font-display text-xl text-ink">
+              {results.length > 0 ? 'Books they’ve pointed to' : 'No matches yet'}
+            </h2>
+            <button
+              type="button"
+              onClick={refineSearch}
+              className="ink-link font-mono text-xs text-ink-faint whitespace-nowrap"
+            >
+              ✎ refine your search
+            </button>
+          </div>
           {results.length === 0 && (
             <p className="mt-2 max-w-md font-serif text-[15px] text-ink-soft">
               We don't have documented recommendations for that combination yet — try a name from the list

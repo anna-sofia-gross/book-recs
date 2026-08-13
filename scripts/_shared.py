@@ -172,13 +172,16 @@ def format_ratings_label(n: int) -> str:
     return f'{n} ratings'
 
 
-def clean_summary(desc: str) -> str:
+def clean_summary(desc: str, max_len: int = 1200) -> str:
+    """Trims a book description to max_len, cutting at a word boundary.
+    Long enough that most Goodreads/Google Books descriptions come through
+    whole — this is what the card's expand-to-read-more shows in full."""
     desc = (desc or '').strip()
     if not desc:
         return ''
-    if len(desc) >= 290:
-        cut = desc.rfind(' ', 0, 280)
-        desc = (desc[:cut] if cut > 0 else desc[:280]).rstrip('.,;: ') + '…'
+    if len(desc) > max_len:
+        cut = desc.rfind(' ', 0, max_len - 10)
+        desc = (desc[:cut] if cut > 0 else desc[: max_len - 10]).rstrip('.,;: ') + '…'
     return desc
 
 
