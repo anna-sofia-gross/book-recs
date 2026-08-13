@@ -4,6 +4,7 @@ import Landing from './components/Landing'
 import LiteraryTravels from './components/LiteraryTravels'
 import ReadLikeAPro from './components/ReadLikeAPro'
 import { loadCatalog } from './lib/catalog'
+import { READ_LIKE_A_PRO_ENABLED } from './lib/featureFlags'
 import type { Book } from './data/types'
 
 type View = 'home' | 'travel' | 'pro'
@@ -25,14 +26,19 @@ export default function App() {
   return (
     <div className="min-h-screen">
       <Header onHome={() => setView('home')} />
-      {view === 'home' && <Landing onSelectTravel={() => setView('travel')} onSelectPro={() => setView('pro')} />}
+      {view === 'home' && (
+        <Landing
+          onSelectTravel={() => setView('travel')}
+          onSelectPro={READ_LIKE_A_PRO_ENABLED ? () => setView('pro') : undefined}
+        />
+      )}
       {view === 'travel' &&
         (pool ? (
           <LiteraryTravels onBack={() => setView('home')} pool={pool} />
         ) : (
           <CatalogLoading onBack={() => setView('home')} />
         ))}
-      {view === 'pro' &&
+      {view === 'pro' && READ_LIKE_A_PRO_ENABLED &&
         (pool ? (
           <ReadLikeAPro onBack={() => setView('home')} pool={pool} />
         ) : (
