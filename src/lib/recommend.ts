@@ -25,6 +25,25 @@ export const TRAVEL_MIN_RATING = 3.8
 export const PRO_MIN_RATING = 3.4
 
 /**
+ * Genres with a strong, distinct reader expectation — a book tagged one of
+ * these only shows up when the user explicitly asked for it. Without this,
+ * a book tagged both "Young Adult" and "Fiction" (e.g. Astrid Lindgren) or
+ * "Mystery/Thriller" and "Fiction" (e.g. Stieg Larsson) surfaces for any
+ * plain "Fiction" search purely because "Fiction" is one of its several
+ * genre tags, crowding out books that are Fiction *without* also being a
+ * thriller or aimed at teens. Broad/umbrella genres (Fiction, Nonfiction,
+ * Literary Fiction, Classic, etc.) stay opt-out as before — only genres
+ * that represent a distinct format or audience are opt-in.
+ */
+const EXCLUSIVE_GENRES: Genre[] = ['Young Adult', 'Mystery/Thriller', 'Romance', 'Horror', 'Sci-Fi/Fantasy']
+
+/** True if a book carries an exclusive genre the user didn't ask for. */
+function blockedByExclusiveGenre(book: Book, selectedGenres: Genre[]): boolean {
+  if (selectedGenres.length === 0) return false // "any genre" — don't filter
+  return book.genres.some((g) => EXCLUSIVE_GENRES.includes(g) && !selectedGenres.includes(g))
+}
+
+/**
  * Stand-in for a real Goodreads/Fable OAuth read-shelf pull. There's no public
  * Goodreads API to connect to (it was shut down to new developers in 2020),
  * so "connecting" a profile simulates what the exclusion would look like.
@@ -76,6 +95,7 @@ export function recommendForTravel(pool: Book[], input: TravelInput): RankedBook
   const candidates = pool.filter((b) => {
     if (b.goodreadsRating < TRAVEL_MIN_RATING) return false
     if (connectedIds.includes(b.id)) return false
+    if (blockedByExclusiveGenre(b, input.genres)) return false
     return true
   })
 
@@ -121,6 +141,7 @@ export function recommendForPro(pool: Book[], input: ProInput): RankedBook[] {
   const candidates = pool.filter((b) => {
     if (b.goodreadsRating < PRO_MIN_RATING) return false
     if (!b.recommendedBy || b.recommendedBy.length === 0) return false
+    if (blockedByExclusiveGenre(b, input.genres)) return false
     return b.recommendedBy.some((r) => peopleTerms.some((p) => normalize(r.name).includes(p) || p.includes(normalize(r.name))))
   })
 
