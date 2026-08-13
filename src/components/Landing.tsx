@@ -21,10 +21,10 @@ export default function Landing({
         </p>
       </div>
 
-      <div className={singleFlow ? 'mt-14 max-w-xl' : 'mt-14 grid gap-6 sm:grid-cols-2'}>
+      <div className={singleFlow ? 'mt-10 max-w-2xl' : 'mt-14 grid gap-6 sm:grid-cols-2'}>
         <button
           onClick={onSelectTravel}
-          className="group relative overflow-hidden rounded-2xl border border-ink/10 bg-paper-card p-8 text-left shadow-card transition-transform hover:-translate-y-1"
+          className="group relative block w-full overflow-hidden rounded-2xl border border-ink/10 bg-paper-card p-8 text-left shadow-card transition-transform hover:-translate-y-1"
         >
           <div className="absolute -right-8 -top-8 h-32 w-32 rounded-full bg-rust/10 transition-transform group-hover:scale-110" />
           <h2 className="mt-3 font-display text-2xl text-ink sm:text-3xl">Literary Travels</h2>
